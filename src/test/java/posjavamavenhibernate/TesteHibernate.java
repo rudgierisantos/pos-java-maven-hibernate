@@ -1,5 +1,7 @@
 package posjavamavenhibernate;
 
+import java.util.List;
+
 import model.UsuarioPessoa;
 
 import org.junit.Ignore;
@@ -53,7 +55,7 @@ public class TesteHibernate {
 	}
 	
 
-	@Test
+	@Ignore
 	public void testeUpdate(){
 		DaoGeneric<UsuarioPessoa> daoGeneric = new DaoGeneric<UsuarioPessoa>();
 		
@@ -67,5 +69,80 @@ public class TesteHibernate {
 		System.out.println(pessoa);
 		
 	}
+	
+	@Ignore
+	public void testeDelete(){
+		DaoGeneric<UsuarioPessoa> daoGeneric = new DaoGeneric<UsuarioPessoa>();
+		
+		UsuarioPessoa pessoa = daoGeneric.pesquisar(3L , UsuarioPessoa.class);
+		
+		daoGeneric.deletarPorId(pessoa);
+				
+	}
+	
+	@Ignore
+	public void testeConsultar(){
+		DaoGeneric<UsuarioPessoa> daoGeneric = new DaoGeneric<UsuarioPessoa>();
+		
+		List<UsuarioPessoa> list = daoGeneric.listar(UsuarioPessoa.class);
+		
+		for(UsuarioPessoa usuarioPessoa : list){
+			System.out.println(usuarioPessoa);
+			System.out.println("-------------------------------------------------------------------");
+		}
+						
+	}
+	
+	@Ignore
+	public void testeQueryList(){
+		DaoGeneric<UsuarioPessoa> daoGeneric = new DaoGeneric<UsuarioPessoa>();
+
+		List<UsuarioPessoa> list = daoGeneric.getEntityManager().createQuery(" from UsuarioPessoa").getResultList();
+		
+		for (UsuarioPessoa usuarioPessoa : list) {
+			System.out.println(usuarioPessoa);
+		}
+	}
+	
+	@Ignore
+	public void testeQueryListMaxResult(){
+		DaoGeneric<UsuarioPessoa> daoGeneric = new DaoGeneric<UsuarioPessoa>();
+
+		List<UsuarioPessoa> list = daoGeneric.getEntityManager()
+				.createQuery(" from UsuarioPessoa order by nome")
+				.setMaxResults(2)
+				.getResultList();
+		
+		for (UsuarioPessoa usuarioPessoa : list) {
+			System.out.println(usuarioPessoa);
+		}
+	}
+	
+	@Ignore
+	public void testeQueryListParameter(){
+		DaoGeneric<UsuarioPessoa> daoGeneric = new DaoGeneric<UsuarioPessoa>();
+
+		List<UsuarioPessoa> list = daoGeneric.
+				getEntityManager().createQuery("from UsuarioPessoa where nome = :nome")
+				.setParameter("nome", "Rudgieri Santoss").getResultList();
+		
+		for (UsuarioPessoa usuarioPessoa : list) {
+			System.out.println(usuarioPessoa);
+		}
+		
+	}
+	
+	@Test
+	public void testeQuerySomaIdade(){
+		
+		DaoGeneric<UsuarioPessoa> daoGeneric = new DaoGeneric<UsuarioPessoa>();
+
+		Long somaIdade = (Long) daoGeneric.getEntityManager()
+				.createQuery("select sum(u.idade) from UsuarioPessoa u ").getSingleResult();
+		
+		System.out.println("Soma de todas as idades é -> " +somaIdade);
+		
+	}
+	
 
 }
